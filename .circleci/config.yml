@@ -1,0 +1,27 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7
+
+jobs:
+  deploy:
+    working_directory: ~/[ProjectName]
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: install
+          command: yarn install
+      - run:
+          name: deploy
+          command: yarn deploy
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only:
+                - main

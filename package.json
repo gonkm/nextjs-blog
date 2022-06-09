@@ -3,7 +3,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "vercel --token $VERCEL_TOKEN --prod --confirm"
   },
   "dependencies": {
     "date-fns": "^2.11.1",
