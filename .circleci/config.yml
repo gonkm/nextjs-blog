@@ -52,6 +52,8 @@ jobs:
 
 workflows:
   version: 2
+  deploy:
+    jobs:
       - staging-deploy:
           filters:
             branches:
