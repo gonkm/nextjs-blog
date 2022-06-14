@@ -52,18 +52,22 @@ jobs:
 
 workflows:
   version: 2
-  staging-deploy:
+  deploy:
     jobs:
-      - staging-deploy
-      - pr-release:
+      - staging-deploy:
           filters:
             branches:
               only:
                 - staging
-  production-deploy:
-    jobs:
+      - pr-release:
+          requires:
+            - staging-deploy
+          filters:
+            branches:
+              only:
+                - staging
       - production-deploy:
           filters:
             branches:
-              only: 
+              only:
                 - main
