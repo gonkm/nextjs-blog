@@ -30,16 +30,18 @@ jobs:
     executor: node
     resource_class: small
     steps:
-      - setup
-      - deploy:
-          deploy_args: --token ${VERCEL_TOKEN}
+      - setup:
+      - run:
+          name: staging deploy
+          command: yarn deploy:staging
   production-deploy:
     executor: node
     resource_class: small
     steps:
-      - setup
-      - deploy:
-          deploy_args: --token ${VERCEL_TOKEN} --prod
+      - setup:
+      - run:
+          name: staging deploy
+          command: yarn deploy:production
   pr-release:
     docker:
       - image: cimg/ruby:3.1.2
