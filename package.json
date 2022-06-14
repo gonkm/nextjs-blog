@@ -4,6 +4,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "cypress:install": "cypress install",
+    "cypress:run": "cypress run",
     "deploy": "vercel --token $VERCEL_TOKEN --prod --confirm"
   },
   "dependencies": {
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^16.3.3",
     "@types/react": "^17.0.14",
+    "cypress": "^10.0.3",
     "typescript": "^4.3.5"
   }
 }
