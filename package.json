@@ -6,7 +6,8 @@
     "start": "next start",
     "cypress:install": "cypress install",
     "cypress:run": "cypress run",
-    "deploy": "vercel --token $VERCEL_TOKEN --prod --confirm"
+    "deploy:staging": "vercel --token $VERCEL_TOKEN --confirm",
+    "deploy:production": "vercel --token $VERCEL_TOKEN --prod --confirm"
   },
   "dependencies": {
     "date-fns": "^2.11.1",
