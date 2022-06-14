@@ -5,28 +5,63 @@ orbs:
 executors:
   node:
     docker:
-      - image: cimg/node:16.15.0
+      - image: cimg/node:16.15.0-browsers
     resource_class: small
     working_directory: ~/nextjs-blog-line
 
-jobs:
-  deploy:
-    executor: node
+commands:
+  setup:
     steps:
       - checkout
-      - run:
-          name: install
-          command: yarn install
-      - run:
-          name: deploy
-          command: yarn deploy
+      - node/install-packages:
+          cache-version: v1
+          pkg-manager: yarn
+  deploy:
+    parameters:
+      deploy_args:
+        description: オプション
+        type: string
+        default: ""
+    steps:
+      - run: vercel --confirm << parameters.deploy_args >>
+
+jobs:
+  staging-deploy:
+    executor: node
+    resource_class: small
+    steps:
+      - setup
+      - deploy:
+          deploy_args: --token ${VERCEL_TOKEN}
+  production-deploy:
+    executor: node
+    resource_class: small
+    steps:
+      - setup
+      - deploy:
+          deploy_args: --token ${VERCEL_TOKEN} --prod
+  pr-release:
+    docker:
+      - image: cimg/ruby:3.1.2
+    steps:
+      - checkout
+      - run: gem install -N git-pr-release
+      - run: git-pr-release --no-fetch
 
 workflows:
   version: 2
-  main:
+  staging-deploy:
     jobs:
-      - deploy:
+      - staging-deploy
+      - pr-release:
           filters:
             branches:
               only:
+                - staging
+  production-deploy:
+    jobs:
+      - production-deploy:
+          filters:
+            branches:
+              only: 
                 - main
