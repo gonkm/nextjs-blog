@@ -30,7 +30,7 @@ jobs:
     executor: node
     resource_class: small
     steps:
-      - setup:
+      - setup
       - run:
           name: staging deploy
           command: yarn deploy:staging
@@ -38,7 +38,7 @@ jobs:
     executor: node
     resource_class: small
     steps:
-      - setup:
+      - setup
       - run:
           name: staging deploy
           command: yarn deploy:production
