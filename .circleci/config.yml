@@ -40,7 +40,7 @@ jobs:
     steps:
       - setup
       - run:
-          name: staging deploy
+          name: production deploy
           command: yarn deploy:production
   pr-release:
     docker:
