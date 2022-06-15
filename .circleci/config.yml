@@ -8,6 +8,10 @@ executors:
       - image: cimg/node:16.15.0-browsers
     resource_class: small
     working_directory: ~/nextjs-blog-line
+  ruby:
+    docker:
+      - image: cimg/ruby:3.1.2
+    resource_class: small
 
 commands:
   setup:
@@ -16,35 +20,31 @@ commands:
       - node/install-packages:
           cache-version: v1
           pkg-manager: yarn
-  deploy:
-    parameters:
-      deploy_args:
-        description: オプション
-        type: string
-        default: ""
-    steps:
-      - run: vercel --confirm << parameters.deploy_args >>
+      - run:
+          name: Setup .vercel/project.json
+          command: |
+            mkdir -p .vercel
+            touch .vercel/project.json
+            echo '{"orgId":"'$VERCEL_ORG_ID'", "projectId":"'$VERCEL_PROJECT_ID'"}' >> .vercel/project.json
+            cat .vercel/project.json
 
 jobs:
   staging-deploy:
     executor: node
-    resource_class: small
     steps:
       - setup
       - run:
-          name: staging deploy
+          name: Staging Deploy
           command: yarn deploy:staging
   production-deploy:
     executor: node
-    resource_class: small
     steps:
       - setup
       - run:
-          name: staging deploy
+          name: Production Deploy
           command: yarn deploy:production
   pr-release:
-    docker:
-      - image: cimg/ruby:3.1.2
+    executor: ruby
     steps:
       - checkout
       - run: gem install -N git-pr-release
