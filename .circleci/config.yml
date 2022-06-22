@@ -27,8 +27,16 @@ commands:
             touch .vercel/project.json
             echo '{"orgId":"'$VERCEL_ORG_ID'", "projectId":"'$VERCEL_PROJECT_ID'"}' >> .vercel/project.json
             cat .vercel/project.json
+  lint:
+    steps:
+      - run: yarn lint
 
 jobs:
+  check-lint:
+    executor: node
+    steps:
+      - setup
+      - lint
   staging-deploy:
     executor: node
     steps:
@@ -54,7 +62,10 @@ workflows:
   version: 2
   deploy:
     jobs:
+      - check-lint
       - staging-deploy:
+          requires:
+            - check-lint
           filters:
             branches:
               only:
@@ -67,6 +78,8 @@ workflows:
               only:
                 - staging
       - production-deploy:
+          requires:
+            - check-lint
           filters:
             branches:
               only:
